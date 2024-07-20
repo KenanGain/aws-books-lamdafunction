@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookager</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="spacer1 layer1"></div>
+    <section class="navy" id="section1">
+        <img src="logo.png" height="90px" width="90px">
+        <h1 class="title white-font">BOOKAGER</h1>
+        <p class="tagline white-font">A place where all the readers gathers, Welcome Aboard!</p>
+        <a class="smooth-scroll" href="#section2"><p class="arrow-down">⇣</p></a>
+        <div class="wave">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+            </svg>
+        </div>
+    </section>
+    <section class="white" id="section2">
+        <input type="text" id="search" placeholder="Search any Book here"> 
+        <ul id="results"></ul> 
+        <div class="button-div">
+            <button id="signUpBtn">Sign Up</button>
+            <button id="logInBtn" style="--c:#CE2D4F">Log In</button>
+        </div>
+    </section>
+
+    <!-- Pop-up Containers -->
+    <div id="popup-container" class="popup-container">
+        <div class="popup" id="loginForm">
+            <div class="form-flex">
+                <button class="close-btn" id="closeLogin">Close</button>
+                <h2 class="black">Log In</h2>
+                <input type="text" id="login-email" placeholder="Email">
+                <input type="password" id="login-password" placeholder="Password">
+                <p class="black">Don't have an account? <a href="#" id="goToSignUp"><span class="bold-text">Sign Up here</span></a></p>
+                <button id="loginSubmit">Log In</button>
+            </div>
+        </div>
+        <div class="popup" id="signUpForm">
+            <div class="form-flex">
+                <button class="close-btn" id="closeSignUp">Close</button>
+                <h2 class="black">Sign Up</h2>
+                <input type="text" id="signup-email" placeholder="Email">
+                <input type="password" id="signup-password" placeholder="Create Password">
+                <input type="password" id="signup-confirm-password" placeholder="Confirm Password">
+                <p class="black">Already have an account? <a href="#" id="goToLogin"><span class="bold-text">Log In here </span></a></p>
+                <button id="signUpSubmit">Sign Up</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; Bookager 2024
+    </footer>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
