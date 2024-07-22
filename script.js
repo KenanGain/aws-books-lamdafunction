@@ -112,23 +112,40 @@ document.addEventListener('DOMContentLoaded', () => {
   // Pop-up functionality for books.html
   const addBook = document.getElementById('addBook');
   const editBook = document.getElementById('editBook');
+  const deleteBook = document.getElementById('deleteBook');
+
   const closeAddBook = document.getElementById('closeAddBook');
   const closeEditBook = document.getElementById('closeEditBook');
+  const deleteBookNo = document.getElementById('deleteBookNo');
+
   const addBookBtn = document.getElementById('addBookBtn');
   const editBookBtn = document.getElementById('editBookBtn');
+  const deleteBookBtn = document.getElementById('deleteBookBtn');
 
-  if (addBook && editBook && closeAddBook && closeEditBook && addBookBtn && editBookBtn) {
+
+  if (addBook && editBook && closeAddBook && closeEditBook && addBookBtn && editBookBtn && deleteBook && deleteBookNo && deleteBookBtn) {
       addBookBtn.addEventListener('click', () => {
           popupContainer.classList.add('show');
           addBook.style.display = 'block';
           editBook.style.display = 'none';
+          deleteBook.style.display = 'none';
+
       });
 
       editBookBtn.addEventListener('click', () => { 
           popupContainer.classList.add('show');
           editBook.style.display = 'block';
           addBook.style.display = 'none';
+          deleteBook.style.display = 'none';
+
       });
+
+      deleteBookBtn.addEventListener('click', () => { 
+        popupContainer.classList.add('show');
+        deleteBook.style.display = 'block';
+        addBook.style.display = 'none';
+        editBook.style.display = 'none';
+    });
 
       closeAddBook.addEventListener('click', () => {
           popupContainer.classList.remove('show');
@@ -137,10 +154,10 @@ document.addEventListener('DOMContentLoaded', () => {
       closeEditBook.addEventListener('click', () => {
           popupContainer.classList.remove('show');
       });
-  }
-});
+      
+      deleteBookNo.addEventListener('click', () => {
+        popupContainer.classList.remove('show');
+    });
 
-$('#yearPicker').datetimepicker({
-  format      :   "YYYY",
-  viewMode    :   "years", 
+  }
 });

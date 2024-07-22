@@ -43,7 +43,7 @@
                 </p>
                 <div class="crud-buttons">
                     <button id="editBookBtn">Edit</button>
-                    <button style="--c:#CE2D4F">Delete</button>
+                    <button style="--c:#CE2D4F" id="deleteBookBtn">Delete</button>
                 </div>
                 </div>
             </div> 
@@ -64,7 +64,7 @@
             </p>
             <div class="crud-buttons">
                 <button id="editBookBtn">Edit</button>
-                <button style="--c:#CE2D4F">Delete</button>
+                <button style="--c:#CE2D4F" id="deleteBookBtn">Delete</button>
             </div>
             </div>
         </div> 
@@ -85,7 +85,7 @@
             </p>
             <div class="crud-buttons">
                 <button id="editBookBtn">Edit</button>
-                <button style="--c:#CE2D4F">Delete</button>
+                <button style="--c:#CE2D4F" id="deleteBookBtn">Delete</button>
             </div>
             </div>
         </div> 
@@ -114,6 +114,13 @@
                 <input type="text" id="book-title" placeholder="Book Title">
                 <input type="number" id="book-year" name="Year" placeholder="YYYY" />
                 <button>Edit Book</button>
+            </div>
+        </div>
+        <div class="popup" id="deleteBook">
+            <div class="form-flex2">
+                <h2 class="black">Are you sure you want to Delete This Book?</h2>
+                <button id="deleteBookYes">YES</button>
+                <button id="deleteBookNo">NO</button>
             </div>
         </div>
     </div>
