@@ -298,6 +298,7 @@ button {
     justify-content: center;
     visibility: hidden;
     opacity: 0;
+    z-index: 1001;
     transition: visibility 0s, opacity 0.5s;
 }
 
@@ -310,6 +311,8 @@ button {
     text-align: center;
     transform-style: preserve-3d;
     backface-visibility: hidden;
+    z-index: 1002;
+
 }
 
 .form-flex {
@@ -503,7 +506,7 @@ footer {
   }
   
   .card:hover .content::before {
-    rotate: -3deg;
+    rotate: -4deg;
     top: 0;
     width: 100%;
     height: 100%;

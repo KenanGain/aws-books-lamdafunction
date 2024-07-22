@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bookager</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Add this line -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script> <!-- Add this line -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script> <!-- Add this line -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" /> <!-- Add this line -->
 </head>
 <body>
     <div class="lock-top-bar">
@@ -15,7 +19,7 @@
                 <p class="title2 zero-space">BOOKAGER</p>
             </div>
             <div class="zero-space signout-button">
-                <button>Add Book</button>
+                <button id="addBookBtn">Add Book</button>
                 <button style="--c:#CE2D4F">Sign Out</button>
             </div>
         </section>
@@ -23,6 +27,7 @@
     <section id="section4"></section>
 
     <section id="section5">
+        <!-- card1 -->
             <div class="card">
                 <div class="content">
                     <h1 class="booktitle zero-space">Book Title</h1>
@@ -37,57 +42,92 @@
                     <span class="bold">Year:</span> 0000
                 </p>
                 <div class="crud-buttons">
-                    <button>Edit</button>
+                    <button id="editBookBtn">Edit</button>
                     <button style="--c:#CE2D4F">Delete</button>
                 </div>
                 </div>
             </div> 
 
-            <div class="card">
-                <div class="content">
-                    <h1 class="booktitle zero-space">Book Title</h1>
-                    <img src="logo-navy.png">
-                <p class="para">
-                    <span class="bold">Authors:</span> Author1, Author2, Author3
-                </p>
-                <p class="para">
-                    <span class="bold">Publisher:</span> Publisher name
-                </p>
-                <p class="para">
-                    <span class="bold">Year:</span> 0000
-                </p>
-                <div class="crud-buttons">
-                    <button>Edit</button>
-                    <button style="--c:#CE2D4F">Delete</button>
-                </div>
-                </div>
-            </div> 
+        <!-- card2 -->
+        <div class="card">
+            <div class="content">
+                <h1 class="booktitle zero-space">Book Title</h1>
+                <img src="logo-navy.png">
+            <p class="para">
+                <span class="bold">Authors:</span> Author1, Author2, Author3
+            </p>
+            <p class="para">
+                <span class="bold">Publisher:</span> Publisher name
+            </p>
+            <p class="para">
+                <span class="bold">Year:</span> 0000
+            </p>
+            <div class="crud-buttons">
+                <button id="editBookBtn">Edit</button>
+                <button style="--c:#CE2D4F">Delete</button>
+            </div>
+            </div>
+        </div> 
 
-            <div class="card">
-                <div class="content">
-                    <h1 class="booktitle zero-space">Book Title</h1>
-                    <img src="logo-navy.png">
-                <p class="para">
-                    <span class="bold">Authors:</span> Author1, Author2, Author3
-                </p>
-                <p class="para">
-                    <span class="bold">Publisher:</span> Publisher name
-                </p>
-                <p class="para">
-                    <span class="bold">Year:</span> 0000
-                </p>
-                <div class="crud-buttons">
-                    <button>Edit</button>
-                    <button style="--c:#CE2D4F">Delete</button>
-                </div>
-                </div>
-            </div> 
+        <!-- card3 -->
+        <div class="card">
+            <div class="content">
+                <h1 class="booktitle zero-space">Book Title</h1>
+                <img src="logo-navy.png">
+            <p class="para">
+                <span class="bold">Authors:</span> Author1, Author2, Author3
+            </p>
+            <p class="para">
+                <span class="bold">Publisher:</span> Publisher name
+            </p>
+            <p class="para">
+                <span class="bold">Year:</span> 0000
+            </p>
+            <div class="crud-buttons">
+                <button id="editBookBtn">Edit</button>
+                <button style="--c:#CE2D4F">Delete</button>
+            </div>
+            </div>
+        </div> 
 
     </section>
+
+    <!-- Pop-up Containers -->
+    <div id="popup-container" class="popup-container">
+        <div class="popup" id="addBook">
+            <div class="form-flex">
+                <button class="close-btn" id="closeAddBook">Close</button>
+                <h2 class="black">Add Book</h2>
+                <input type="text" id="book-title" placeholder="Book Title">
+                <input type="text" id="book-author" placeholder="Author Name">
+                <input type="text" id="book-publisher" placeholder="Book Publisher">
+                <input type="number" id="book-year" name="Year" placeholder="YYYY"/>
+                <button>Add Book</button>
+            </div>
+        </div>
+        <div class="popup" id="editBook">
+            <div class="form-flex">
+                <button class="close-btn" id="closeEditBook">Close</button>
+                <h2 class="black">Edit Book</h2>
+                <input type="text" id="book-title" placeholder="Book Title">
+                <input type="text" id="book-title" placeholder="Book Title">
+                <input type="text" id="book-title" placeholder="Book Title">
+                <input type="number" id="book-year" name="Year" placeholder="YYYY" />
+                <button>Edit Book</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- "Title": "Automating DevOps with GitLab CI/CD Pipelines",
+    "Authors": "Christopher Cowell, Nicholas Lotz and Chris Timberlake",
+    "Publisher": "Packt Publishing",
+    "Year": 2023 -->
 
     <footer>
         &copy; Bookager 2024
     </footer>
+
 
     <script src="script.js"></script>
 
