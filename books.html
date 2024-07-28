@@ -5,87 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bookager</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1386.0.min.js"></script>
+    <script src="amazon-cognito-identity.min.js"></script>
 </head>
 <body>
     <div class="lock-top-bar">
         <div class="spacer2 layer2"></div>
         <section id="section3">
             <div class="logo-title">
-                <img src="logo-navy.png" class="zero-space" height="60px" width="60px"> 
+                <img src="logo-navy.png" class="zero-space" height="60px" width="60px" alt="image"> 
                 <p class="title2 zero-space">BOOKAGER</p>
             </div>
             <div class="zero-space signout-button">
                 <button id="addBookBtn">Add Book</button>
-                <button style="--c:#CE2D4F">Sign Out</button>
+                <button id="logoutBtn" style="--c:#CE2D4F">Sign Out</button>
+                <button id="resetPasswordBtn">Reset Password</button>
+                <button id="deleteAccountBtn" style="--c:#CE2D4F">Delete Account</button>
             </div>
         </section>
     </div>
     <section id="section4"></section>
 
     <section id="section5">
-        <!-- card1 -->
-            <div class="card">
-                <div class="content">
-                    <h1 class="booktitle zero-space">Automating DevOps with GitLab CI/CD Pipelines</h1>
-                    <img src="logo-navy.png">
-                <p class="para">
-                    <span class="bold">Authors:</span> Author1, Author2, Author3
-                </p>
-                <p class="para">
-                    <span class="bold">Publisher:</span> Publisher name
-                </p>
-                <p class="para">
-                    <span class="bold">Year:</span> 0000
-                </p>
+        <!-- Example book card -->
+        <div class="card">
+            <div class="content">
+                <h1 class="booktitle zero-space">Automating DevOps with GitLab CI/CD Pipelines</h1>
+                <img src="logo-navy.png" alt="Book cover">
+                <p class="para"><span class="bold">Authors:</span> Author1, Author2, Author3</p>
+                <p class="para"><span class="bold">Publisher:</span> Publisher name</p>
+                <p class="para"><span class="bold">Year:</span> 2023</p>
                 <div class="crud-buttons">
-                    <button id="editBookBtn">Edit</button>
-                    <button style="--c:#CE2D4F" id="deleteBookBtn">Delete</button>
+                    <button class="editBookBtn">Edit</button>
+                    <button class="deleteBookBtn" style="--c:#CE2D4F">Delete</button>
                 </div>
-                </div>
-            </div> 
-
-        <!-- card2 -->
-        <div class="card">
-            <div class="content">
-                <h1 class="booktitle zero-space">Book Title</h1>
-                <img src="logo-navy.png">
-            <p class="para">
-                <span class="bold">Authors:</span> Author1, Author2, Author3
-            </p>
-            <p class="para">
-                <span class="bold">Publisher:</span> Publisher name
-            </p>
-            <p class="para">
-                <span class="bold">Year:</span> 0000
-            </p>
-            <div class="crud-buttons">
-                <button id="editBookBtn">Edit</button>
-                <button style="--c:#CE2D4F" id="deleteBookBtn">Delete</button>
-            </div>
             </div>
         </div> 
-
-        <!-- card3 -->
-        <div class="card">
-            <div class="content">
-                <h1 class="booktitle zero-space">Book Title</h1>
-                <img src="logo-navy.png">
-            <p class="para">
-                <span class="bold">Authors:</span> Author1, Author2, Author3
-            </p>
-            <p class="para">
-                <span class="bold">Publisher:</span> Publisher name
-            </p>
-            <p class="para">
-                <span class="bold">Year:</span> 0000
-            </p>
-            <div class="crud-buttons">
-                <button id="editBookBtn">Edit</button>
-                <button style="--c:#CE2D4F" id="deleteBookBtn">Delete</button>
-            </div>
-            </div>
-        </div> 
-
+        <!-- Add more book cards as needed -->
     </section>
 
     <!-- Pop-up Containers -->
@@ -105,34 +61,26 @@
             <div class="form-flex">
                 <button class="close-btn" id="closeEditBook">Close</button>
                 <h2 class="black">Edit Book</h2>
-                <input type="text" id="book-title" placeholder="Book Title">
-                <input type="text" id="book-title" placeholder="Book Title">
-                <input type="text" id="book-title" placeholder="Book Title">
-                <input type="number" id="book-year" name="Year" placeholder="YYYY" />
+                <input type="text" id="edit-book-title" placeholder="Book Title">
+                <input type="text" id="edit-book-author" placeholder="Author Name">
+                <input type="text" id="edit-book-publisher" placeholder="Book Publisher">
+                <input type="number" id="edit-book-year" name="Year" placeholder="YYYY"/>
                 <button>Edit Book</button>
             </div>
         </div>
         <div class="popup" id="deleteBook">
             <div class="form-flex2">
-                <h2 class="black">Are you sure you want to Delete This Book?</h2>
+                <h2 class="black">Are you sure you want to delete this book?</h2>
                 <button id="deleteBookYes">YES</button>
                 <button id="deleteBookNo">NO</button>
             </div>
         </div>
     </div>
 
-
-    <!-- "Title": "Automating DevOps with GitLab CI/CD Pipelines",
-    "Authors": "Christopher Cowell, Nicholas Lotz and Chris Timberlake",
-    "Publisher": "Packt Publishing",
-    "Year": 2023 -->
-
     <footer>
         &copy; Bookager 2024
     </footer>
 
-
     <script src="script.js"></script>
-
 </body>
 </html>

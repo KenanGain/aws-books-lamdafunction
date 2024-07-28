@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bookager</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1386.0.min.js"></script>
+    <script src="amazon-cognito-identity.min.js"></script>
 </head>
 <body>
     <div class="spacer1 layer1"></div>
     <section class="navy" id="section1">
-        <img src="logo.png" class="logo" height="90px" width="90px">
+        <img src="logo.png" class="logo" height="90px" width="90px" alt="logo">
         <h1 class="title white-font">BOOKAGER</h1>
-        <p class="tagline white-font">A place where all the readers gathers, Welcome Aboard!</p>
+        <p class="tagline white-font">A place where all the readers gather, Welcome Aboard!</p>
         <a class="smooth-scroll" href="#section2"><p class="arrow-down">⇣</p></a>
         <div class="wave">
             <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
@@ -34,8 +36,8 @@
             <div class="form-flex">
                 <button class="close-btn" id="closeLogin">Close</button>
                 <h2 class="black">Log In</h2>
-                <input type="text" id="login-email" placeholder="Email">
-                <input type="password" id="login-password" placeholder="Password">
+                <input type="text" id="loginUsername" placeholder="Username">
+                <input type="password" id="loginPassword" placeholder="Password">
                 <p class="black">Don't have an account? <a href="#" id="goToSignUp"><span class="bold-text">Sign Up here</span></a></p>
                 <button id="loginSubmit">Log In</button>
             </div>
@@ -44,9 +46,9 @@
             <div class="form-flex">
                 <button class="close-btn" id="closeSignUp">Close</button>
                 <h2 class="black">Sign Up</h2>
-                <input type="text" id="signup-email" placeholder="Email">
-                <input type="password" id="signup-password" placeholder="Create Password">
-                <input type="password" id="signup-confirm-password" placeholder="Confirm Password">
+                <input type="text" id="signupUsername" placeholder="Username">
+                <input type="email" id="signupEmail" placeholder="Email">
+                <input type="password" id="signupPassword" placeholder="Password">
                 <p class="black">Already have an account? <a href="#" id="goToLogin"><span class="bold-text">Log In here </span></a></p>
                 <button id="signUpSubmit">Sign Up</button>
             </div>
