@@ -1,22 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded and parsed');
 
-    // Smooth scroll functionality
-    document.querySelectorAll('a.smooth-scroll').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
-            });
-        });
-    });
-
     // Cognito configuration
     const poolData = {
-        UserPoolId: '**************', // Replace with your User Pool ID
-        ClientId: '******************' // Replace with your Client ID
+        
     };
     const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+
+    let currentUser;
 
     // Function to check authentication
     function checkAuthentication() {
@@ -25,18 +16,29 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cognitoUser != null) {
             cognitoUser.getSession((err, session) => {
                 if (err || !session.isValid()) {
-                    window.location.href = 'index.html';
+                    console.error('Session is invalid or error occurred:', err);
+                    // Stay on the page and show login form if session is invalid
+                    showLoginPopup();
                     return;
                 }
+                currentUser = cognitoUser;
                 displayUsername(cognitoUser);
+                fetchAndDisplayBooks(); // Fetch and display books after authentication
             });
+        } else {
+            console.log('No cognito user found, showing login form.');
+            // Stay on the page and show login form if no user found
+            showLoginPopup();
         }
     }
 
     // Function to display username
     function displayUsername(cognitoUser) {
         cognitoUser.getUserAttributes((err, attributes) => {
-            if (err) return; // Silently ignore errors
+            if (err) {
+                console.error('Error getting user attributes:', err);
+                return;
+            }
             const username = cognitoUser.getUsername();
             const usernameElement = document.getElementById('username');
             if (usernameElement) {
@@ -90,9 +92,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to show login pop-up
     function showLoginPopup() {
-        popupContainer.classList.add('show');
-        loginForm.style.display = 'block';
-        signUpForm.style.display = 'none';
+        document.getElementById('popup-container').classList.add('show');
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('signUpForm').style.display = 'none';
     }
 
     // Log In Function
@@ -178,38 +180,111 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('One or more elements not found in the DOM. Event listeners not attached.');
     }
 
-    // Fetch JSON data and implement search functionality
-    fetch('books.json')
-        .then(response => response.json())
-        .then(data => {
-            let search = document.getElementById('search');
-            let results = document.getElementById('results');
+    // Fetch books data and implement search functionality
+    function fetchAndDisplayBooks() {
+        console.log('Fetching books...');
+        fetch('https://pq9v4plwp1.execute-api.us-east-1.amazonaws.com/dev2/books')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Books fetched successfully:', data);
+                const books = data; // No need to parse data.body as it is already parsed
+                displayBooks(books);
+                setupSearch(books);
+            })
+            .catch(error => console.error('Error fetching books:', error));
+    }
 
-            if (search && results) {
-                search.addEventListener('keyup', function(event) {
-                    results.innerHTML = '';
-                    let searchTerm = event.target.value.toLowerCase();
+    // Function to display books on the page
+    function displayBooks(books) {
+        const section5 = document.getElementById('section5');
+        if (section5) {
+            section5.innerHTML = ''; // Clear any existing content
+            books.forEach(book => {
+                const bookCard = document.createElement('div');
+                bookCard.classList.add('card');
 
-                    if (searchTerm.length > 0) {
-                        data.forEach(function(book) {
-                            if (book.Title.toLowerCase().indexOf(searchTerm) > -1 || 
-                                book.Authors.toLowerCase().indexOf(searchTerm) > -1 || 
-                                book.Publisher.toLowerCase().indexOf(searchTerm) > -1) {
+                bookCard.innerHTML = `
+                    <div class="content">
+                        <h1 class="booktitle zero-space">${book.Title}</h1>
+                        <img src="logo-navy.png" alt="Book cover">
+                        <p class="para"><span class="bold">Authors:</span> ${book.Authors}</p>
+                        <p class="para"><span class="bold">Publisher:</span> ${book.Publisher}</p>
+                        <p class="para"><span class="bold">Year:</span> ${book.Year}</p>
+                        <button class="deleteBookBtn" data-title="${book.Title}" style="--c:#CE2D4F">Delete</button>
+                    </div>
+                `;
 
-                                let item = document.createElement('li');
-                                item.innerHTML = `${book.Title} by ${book.Authors} (${book.Publisher}, ${book.Year})`;
-                                results.appendChild(item);
-                            }
-                        });
-                    }
-                });
-            } else {
-                console.error('Search elements not found.');
-            }
-        })
-        .catch(error => console.error('Error fetching JSON data:', error));
+                section5.appendChild(bookCard);
+            });
 
-    console.log('Script execution completed');
+            setupDeleteButtons(); // Add delete button functionality
+        }
+    }
+
+    // Function to set up the search functionality
+    function setupSearch(books) {
+        const searchInput = document.getElementById('search');
+        const resultsList = document.getElementById('results');
+
+        if (searchInput && resultsList) {
+            searchInput.addEventListener('keyup', function(event) {
+                const searchTerm = event.target.value.toLowerCase();
+                resultsList.innerHTML = '';
+
+                if (searchTerm.length > 0) {
+                    books.forEach(book => {
+                        if (
+                            book.Title.toLowerCase().includes(searchTerm) ||
+                            book.Authors.toLowerCase().includes(searchTerm) ||
+                            book.Publisher.toLowerCase().includes(searchTerm)
+                        ) {
+                            const listItem = document.createElement('li');
+                            listItem.textContent = `${book.Title} by ${book.Authors} (${book.Publisher}, ${book.Year})`;
+                            resultsList.appendChild(listItem);
+                        }
+                    });
+                }
+            });
+        } else {
+            console.error('Search input or results list not found.');
+        }
+    }
+
+    // Function to set up delete button functionality
+    function setupDeleteButtons() {
+        document.querySelectorAll('.deleteBookBtn').forEach(button => {
+            button.addEventListener('click', handleDeleteBook);
+        });
+    }
+
+    // Function to handle deleting a book
+    function handleDeleteBook(event) {
+        if (!currentUser) {
+            alert('You must be logged in to delete a book.');
+            return;
+        }
+
+        const title = event.target.getAttribute('data-title');
+        if (confirm(`Are you sure you want to delete the book: ${title}?`)) {
+            fetch(`https://pq9v4plwp1.execute-api.us-east-1.amazonaws.com/dev2/books?title=${encodeURIComponent(title)}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Book deleted:', data);
+                    fetchAndDisplayBooks(); // Refresh the book list
+                })
+                .catch(error => console.error('Error deleting book:', error));
+        }
+    }
 
     // Add event listeners for the additional buttons on books.html
     const logoutBtn = document.getElementById('logoutBtn');
