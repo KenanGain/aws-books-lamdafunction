@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Cognito configuration
     const poolData = {
-        
+       \6h9stbhvfoqkfi' // Replace with your Client ID
     };
     const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
