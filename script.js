@@ -3,12 +3,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Cognito configuration
     const poolData = {
-       \6h9stbhvfoqkfi' // Replace with your Client ID
+        UserPoolId: 'us-east-1_3IUzJhmnH', // Replace with your User Pool ID
+        ClientId: '6p43v88dpv6t6h9stbhvfoqkfi' // Replace with your Client ID
     };
     const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
     let currentUser;
-
+    let currentEditBookTitle;
     // Function to check authentication
     function checkAuthentication() {
         const cognitoUser = userPool.getCurrentUser();
@@ -199,8 +200,8 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => console.error('Error fetching books:', error));
     }
 
-    // Function to display books on the page
-    function displayBooks(books) {
+     // Function to display books on the page
+     function displayBooks(books) {
         const section5 = document.getElementById('section5');
         if (section5) {
             section5.innerHTML = ''; // Clear any existing content
@@ -215,7 +216,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         <p class="para"><span class="bold">Authors:</span> ${book.Authors}</p>
                         <p class="para"><span class="bold">Publisher:</span> ${book.Publisher}</p>
                         <p class="para"><span class="bold">Year:</span> ${book.Year}</p>
-                        <button class="deleteBookBtn" data-title="${book.Title}" style="--c:#CE2D4F">Delete</button>
+                        <div class="crud-buttons">
+                            <button class="editBookBtn" data-title="${book.Title}">Edit</button>
+                            <button class="deleteBookBtn" data-title="${book.Title}" style="--c:#CE2D4F">Delete</button>
+                        </div>
                     </div>
                 `;
 
@@ -223,6 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             setupDeleteButtons(); // Add delete button functionality
+            setupEditButtons(); // Add edit button functionality
         }
     }
 
@@ -255,12 +260,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    
     // Function to set up delete button functionality
     function setupDeleteButtons() {
         document.querySelectorAll('.deleteBookBtn').forEach(button => {
             button.addEventListener('click', handleDeleteBook);
         });
     }
+
+     // Function to set up edit button functionality
+     function setupEditButtons() {
+        document.querySelectorAll('.editBookBtn').forEach(button => {
+            button.addEventListener('click', handleEditBook);
+        });
+    }
+
 
     // Function to handle deleting a book
     function handleDeleteBook(event) {
@@ -274,7 +288,8 @@ document.addEventListener('DOMContentLoaded', () => {
             fetch(`https://pq9v4plwp1.execute-api.us-east-1.amazonaws.com/dev2/books?title=${encodeURIComponent(title)}`, {
                 method: 'DELETE',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': currentUser.getSignInUserSession().getIdToken().getJwtToken() // Ensure the user is authenticated
                 }
             })
                 .then(response => response.json())
@@ -286,22 +301,185 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Add event listeners for the additional buttons on books.html
-    const logoutBtn = document.getElementById('logoutBtn');
-    const resetPasswordBtn = document.getElementById('resetPasswordBtn');
-    const deleteAccountBtn = document.getElementById('deleteAccountBtn');
-
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', logout);
+    function handleEditBook(event) {
+        if (!currentUser) {
+            alert('You must be logged in to edit a book.');
+            return;
+        }
+    
+        const title = decodeURIComponent(event.target.getAttribute('data-title'));
+        currentEditBookTitle = title;
+        fetch(`https://pq9v4plwp1.execute-api.us-east-1.amazonaws.com/dev2/books?title=${encodeURIComponent(title)}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('edit-book-title').value = data.Title;
+                document.getElementById('edit-book-author').value = data.Authors;
+                document.getElementById('edit-book-publisher').value = data.Publisher;
+                document.getElementById('edit-book-year').value = data.Year;
+    
+                document.getElementById('popup-container').classList.add('show');
+                document.getElementById('editBook').style.display = 'block';
+                document.getElementById('addBook').style.display = 'none';
+            })
+            .catch(error => console.error('Error fetching book details:', error));
     }
 
-    if (resetPasswordBtn) {
-        resetPasswordBtn.addEventListener('click', resetPassword);
+    function handleEditBookSubmit() {
+        if (!currentUser) {
+            alert('You must be logged in to edit a book.');
+            return;
+        }
+    
+        const newTitle = document.getElementById('edit-book-title').value;
+        const authors = document.getElementById('edit-book-author').value;
+        const publisher = document.getElementById('edit-book-publisher').value;
+        const year = document.getElementById('edit-book-year').value;
+    
+        const updatedBook = {
+            Title: newTitle,
+            Authors: authors,
+            Publisher: publisher,
+            Year: parseInt(year)
+        };
+    
+        // First, delete the old book
+        fetch(`https://pq9v4plwp1.execute-api.us-east-1.amazonaws.com/dev2/books?title=${encodeURIComponent(currentEditBookTitle)}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': currentUser.getSignInUserSession().getIdToken().getJwtToken()
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to delete old book entry');
+            }
+            // Then, add the updated book
+            return fetch('https://pq9v4plwp1.execute-api.us-east-1.amazonaws.com/dev2/books', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': currentUser.getSignInUserSession().getIdToken().getJwtToken()
+                },
+                body: JSON.stringify(updatedBook)
+            });
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to add updated book entry');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Book updated:', data);
+            fetchAndDisplayBooks();
+            document.getElementById('editBook').style.display = 'none';
+            document.getElementById('popup-container').classList.remove('show');
+        })
+        .catch(error => {
+            console.error('Error updating book:', error);
+            alert('Failed to update book. Please try again.');
+        });
+    }
+    // Function to handle adding a new book
+    function handleAddBook() {
+        if (!currentUser) {
+            alert('You must be logged in to add a book.');
+            return;
+        }
+
+        const title = document.getElementById('book-title').value;
+        const authors = document.getElementById('book-author').value;
+        const publisher = document.getElementById('book-publisher').value;
+        const year = document.getElementById('book-year').value;
+
+        const newBook = {
+            Title: title,
+            Authors: authors,
+            Publisher: publisher,
+            Year: parseInt(year)
+        };
+
+        fetch('https://pq9v4plwp1.execute-api.us-east-1.amazonaws.com/dev2/books', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': currentUser.getSignInUserSession().getIdToken().getJwtToken() // Ensure the user is authenticated
+            },
+            body: JSON.stringify(newBook)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Book added:', data);
+                fetchAndDisplayBooks(); // Refresh the book list
+                document.getElementById('addBook').style.display = 'none'; // Close the popup
+                document.getElementById('popup-container').classList.remove('show');
+            })
+            .catch(error => console.error('Error adding book:', error));
     }
 
-    if (deleteAccountBtn) {
-        deleteAccountBtn.addEventListener('click', deleteAccount);
-    }
+
+   // Add event listeners for the additional buttons on books.html
+   const logoutBtn = document.getElementById('logoutBtn');
+   const resetPasswordBtn = document.getElementById('resetPasswordBtn');
+   const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+   const addBookBtn = document.getElementById('addBookBtn');
+   const closeAddBook = document.getElementById('closeAddBook');
+   const closeEditBook = document.getElementById('closeEditBook');
+   const addBookSubmit = document.getElementById('addBookSubmit');
+   const editBookSubmit = document.getElementById('editBookSubmit');
+
+   if (logoutBtn) {
+       logoutBtn.addEventListener('click', logout);
+   }
+
+   if (resetPasswordBtn) {
+       resetPasswordBtn.addEventListener('click', resetPassword);
+   }
+
+   if (deleteAccountBtn) {
+       deleteAccountBtn.addEventListener('click', deleteAccount);
+   }
+
+   if (addBookBtn) {
+       addBookBtn.addEventListener('click', () => {
+           document.getElementById('popup-container').classList.add('show');
+           document.getElementById('addBook').style.display = 'block';
+           document.getElementById('editBook').style.display = 'none';
+       });
+   }
+
+   if (closeAddBook) {
+       closeAddBook.addEventListener('click', () => {
+           document.getElementById('addBook').style.display = 'none';
+           document.getElementById('popup-container').classList.remove('show');
+       });
+   }
+
+   if (closeEditBook) {
+       closeEditBook.addEventListener('click', () => {
+           document.getElementById('editBook').style.display = 'none';
+           document.getElementById('popup-container').classList.remove('show');
+       });
+   }
+
+   if (addBookSubmit) {
+       addBookSubmit.addEventListener('click', handleAddBook);
+   }
+
+   if (editBookSubmit) {
+       editBookSubmit.addEventListener('click', handleEditBookSubmit);
+   }
 
     function logout() {
         const cognitoUser = userPool.getCurrentUser();

@@ -27,7 +27,21 @@
     <section id="section4"></section>
 
     <section id="section5">
-        <!-- Books will be dynamically added here -->
+        <!-- Example book card -->
+        <div class="card">
+            <div class="content">
+                <h1 class="booktitle zero-space">Automating DevOps with GitLab CI/CD Pipelines</h1>
+                <img src="logo-navy.png" alt="Book cover">
+                <p class="para"><span class="bold">Authors:</span> Author1, Author2, Author3</p>
+                <p class="para"><span class="bold">Publisher:</span> Publisher name</p>
+                <p class="para"><span class="bold">Year:</span> 2023</p>
+                <div class="crud-buttons">
+                    <button class="editBookBtn">Edit</button>
+                    <button class="deleteBookBtn" style="--c:#CE2D4F">Delete</button>
+                </div>
+            </div>
+        </div> 
+        <!-- Add more book cards as needed -->
     </section>
 
     <!-- Pop-up Containers -->
@@ -52,13 +66,6 @@
                 <input type="text" id="edit-book-publisher" placeholder="Book Publisher">
                 <input type="number" id="edit-book-year" name="Year" placeholder="YYYY"/>
                 <button id="editBookSubmit">Edit Book</button>
-            </div>
-        </div>
-        <div class="popup" id="deleteBook">
-            <div class="form-flex2">
-                <h2 class="black">Are you sure you want to delete this book?</h2>
-                <button id="deleteBookYes">YES</button>
-                <button id="deleteBookNo">NO</button>
             </div>
         </div>
     </div>
